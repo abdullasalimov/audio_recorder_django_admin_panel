@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath recorder core.wsgi:application --log-file -
+web: gunicorn --pythonpath recorder mysite.wsgi:application --log-file -
