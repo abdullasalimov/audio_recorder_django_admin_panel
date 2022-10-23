@@ -1,0 +1,44 @@
+{% load i18n %}
+<div id="{{ widget.name }}_with_media_recorder">
+    {% if widget.is_initial %}
+    <audio controls {% include "django/forms/widgets/attrs.html" %}>
+        <source src="{{ widget.value.url }}" type="audio/ogg" />
+        <source src="{{ widget.value.url }}" type="audio/mpeg" />
+        Your browser does not support the audio element.
+    </audio>
+    {% if not widget.required %}
+    <span class="clearable-file-input">
+        <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"
+            {% if widget.attrs.disabled %} disabled{% endif %} />
+        <label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
+    </span>
+    {% endif %}
+    <p class="pt-2">
+        {{ widget.input_text }}
+    </p>
+    {% endif %}
+    <div class="py-2">
+        <input type="{{ widget.type }}" name="{{ widget.name }}" class="bg-slate-100 p-2"
+            {% include "django/forms/widgets/attrs.html" %} />
+    </div>
+
+    <p>
+        {% translate "Or record an audio" %}
+    </p>
+    <div class="btn-group" role="group">
+        <button id="{{ widget.start_record_button_id }}" type="button"
+            class="px-2 py-1 text-white bg-green-500 disabled:bg-gray-500 rounded-sm" onclick="startRecording(this)">
+            Record
+        </button>
+        <button id="{{ widget.stop_record_button_id }}" type="button"
+            class="px-2 py-1 text-white bg-red-500 disabled:bg-gray-500 disabled:text-gray-200 rounded-sm" disabled
+            onclick="stopRecording(this)">
+            Stop
+        </button>
+    </div>
+    <div class="recording" id="{{ widget.name }}-record-status">
+        <span class="text-sm">
+            {% translate "Click the \"Start Recording\" button to start recording" %}
+        </span>
+    </div>
+</div>
