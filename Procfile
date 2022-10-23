@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath recorder core.wsgi:application --log-file -
