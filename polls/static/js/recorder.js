@@ -1,54 +1,25 @@
 $( document ).ready(function() {
     $('input[type=submit]').click(async function(e) {
-        let url = $('audio').attr('src')
-        if(url != undefined){
-            const fileInput = document.querySelector('input[type="file"]');
-            console.log(url);
-            let file = await fetch(url)
-                    .then(r => r.blob())
-                    .then(blobFile => new File([blobFile], "user_recording.mp3", { type: "mp3" }))
+      let url = $('audio').each(function(){
+        console.log($(this).attr('src'));
+      });
 
-            console.log(file);
+      for (i=0; i<url.length; i++) {
+        new_url = url[i].getAttribute("src");
+        if (new_url != undefined){
+          const fileInput = document.getElementById('id_medias-'+i+'-path_to_file');
+          let file = await fetch(new_url).then(r => r.blob()).then(blobFile => new File([blobFile], "user_recording.mp3", { type: "mp3" }))
 
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            fileInput.files = dataTransfer.files;
-        }
-        $('#word_form').submit()
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(file);
+          fileInput.files = dataTransfer.files;
+        } 
+      }
+      $('#word_form').submit()
     });
 });
 
-/**
- * Load when browser load completely
- */
 
-// "use strict";
-// {
-//   $(document).ready(function ($) {
-//     $(function () {
-//       $("select[id*=media_type").each((i, e)=>{
-//         $(e).bind("change", function (e) {
-//           const _parent = $(this).parent("td").nextSibling;
-//           console.log(_parent);
-//         });
-//       })
-//       $(".inline-group .inline-related .delete input").each(function (i, e) {
-//         $(e).bind("change", function (e) {
-//           if (this.checked) {
-//             // marked for deletion
-//             $(this)
-//               .parents("tr")
-//               // .children("fieldset.module")
-//               .addClass("disabled");
-//           }
-//         });
-//       });
-//     });
-//   });
-// }
-
-
-// var audioFile = document.querySelectorAll("[data-django-audio-recorder]")[0];
 
 const startRecording = function (
   thisButton,
