@@ -1,19 +1,32 @@
 $( document ).ready(function() {
     $('input[type=submit]').click(async function(e) {
-      let url = $('audio').each(function(){
-        console.log($(this).attr('src'));
-      });
+      let url = $('audio').each(function(){});
 
       for (i=0; i<url.length; i++) {
-        new_url = url[i].getAttribute("src");
-        if (new_url != undefined){
-          const fileInput = document.getElementById('id_medias-'+i+'-path_to_file');
-          let file = await fetch(new_url).then(r => r.blob()).then(blobFile => new File([blobFile], "user_recording.mp3", { type: "mp3" }))
+        // new_url = url[i].getAttribute("src");
+        if (url[i] != undefined && url[i] != null){
 
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(file);
-          fileInput.files = dataTransfer.files;
-        } 
+            if (url[i].id.split("_")[0] == "newaudio") {
+            parent_id = document.getElementById(url[i].id).closest("tr").id.split("-")[1];
+
+            const abdulla = document.querySelectorAll('input[type="file"]');
+            
+            for (j=0; j<abdulla.length; j++) {
+              if (abdulla[j].id == 'id_medias-'+parent_id+'-path_to_file') {
+                fileInput = abdulla[j]
+              }
+            }
+            
+
+            let file = await fetch(url[i].src).then(r => r.blob()).then(blobFile => new File([blobFile], "user_recording_"+parent_id+"_.mp3", { type: "mp3" }));
+  
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            fileInput.files = dataTransfer.files;
+          } 
+          
+        }
+
       }
       $('#word_form').submit()
     });
@@ -56,6 +69,7 @@ const startRecording = function (
       // When the MediaRecorder stops
       // recording, it emits "stop"
       // event
+      
       mediaRecorder.onstop = () => {
         /* A Blob is a File like object.
             In fact, the File interface is 
@@ -71,10 +85,13 @@ const startRecording = function (
           type: "audio/mpeg",
         });
         chunks = [];
+        let date = new Date();
+        let temp_id = date.getTime();
 
         // Create a video or audio element
         // that stores the recorded media
         const recordedMedia = document.createElement("audio");
+        recordedMedia.setAttribute('id', 'newaudio_'+temp_id);
         recordedMedia.controls = true;
 
         // You can not directly set the blob as
